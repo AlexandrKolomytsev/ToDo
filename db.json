@@ -1,0 +1,12 @@
+{
+  "posts": [
+    { "id": 1, "text": "delectus aut autem", "status": "checked" },
+    { "id": 2, "text": "quis ut nam facilis et officia qui", "status": "" },
+    { "id": 3, "text": "fugiat veniam minus", "status": "checked" },
+    { "id": 4, "text": "et porro tempora", "status": "" }
+  ],
+  "comments": [
+    { "id": 1, "body": "some comment", "postId": 1 }
+  ],
+  "profile": { "name": "typicode" }
+}

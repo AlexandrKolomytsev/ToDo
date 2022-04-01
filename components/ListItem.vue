@@ -1,31 +1,23 @@
 <template>
   <div>
-    <div class="todo__card">
-      <h3 class="todo__card__title">
-        Активный список
-      </h3>
-      <div class="list__items">
-        <div class="list__item-wrapper">
-          <div
-            v-for="item in list"
-            :key="item.id"
-            class="list__item"
-            :class="{'list__item-active': item.checked}"
-          >
-            <input
-              :id=item.id
-              type="checkbox"
-              class="custom-checkbox"
-              name="happy"
-              :checked="item.checked"
-              @change="toggleChange(item.id)"
-            >
-            <label :for=item.id />
-            <div class="list__item-text">
-              {{ item.text }}
-            </div>
-          </div>
-        </div>
+    <div
+      class="list__item"
+      :class="{'list__item-active': item.checked}"
+      @mouseover="closeCircleActive = true"
+      @mouseleave="closeCircleActive = false"
+    >
+      <div :class="{close__circle: closeCircleActive}" @click="deleteRequest(item.id)" />
+      <input
+        :id="item.id"
+        type="checkbox"
+        class="custom-checkbox"
+        name="happy"
+        :checked="item.checked"
+        @change="toggleChange(item.id, item.checked)"
+      >
+      <label :for="item.id" />
+      <div class="list__item-text">
+        {{ item.text }}
       </div>
     </div>
   </div>
@@ -33,33 +25,50 @@
 
 <script>
 export default {
-  name: 'NuxtTutorial',
-  data () {
-    return {
-      toggle: false,
-      list: null
+  name: 'ListItem',
+  inject: ['updateKey'],
+  props: {
+    item: {
+      type: Object,
+      default: null,
+      require: true
     }
   },
-  mounted () {
-    this.getIncidents()
+  data () {
+    return {
+      closeCircleActive: false
+    }
   },
   methods: {
-    async getIncidents () {
-      await this.$axios.get('http://localhost:3001/posts')
-        .then((response) => {
-          this.list = Object.assign(response.data, { checked: false })
-          console.log(this.list)
+    toggleChange (id, checked) {
+      if (checked === false) {
+        this.$axios.patch('http://localhost:3001/todos/' + `${id}`, {
+          checked: true
         })
+          .then(() => {
+            this.updateKey()
+          })
+      }
+      if (checked === true) {
+        this.$axios.patch('http://localhost:3001/todos/' + `${id}`, {
+          checked: false
+        })
+          .then(() => {
+            this.updateKey()
+          })
+      }
     },
-    toggleChange (id) {
-      const index = this.list.findIndex(e => e.id === id)
-      if (index < 0) { return }
-      this.list[index].checked = !this.list[index].checked
-      this.list = [...this.list]
+    deleteRequest (id) {
+      this.$axios.delete('http://localhost:3001/todos/' + `${id}`)
+        .then((response) => {
+          this.inputText = ''
+          this.updateKey()
+        })
     }
   }
 }
 </script>
+
 <style lang="scss">
 .custom-checkbox{
   position: absolute;
@@ -84,6 +93,7 @@ export default {
   background-size: 50% 50%;
   background-color: #F2C3A7;
   border-radius: 4px;
+  cursor: pointer;
 }
 
 .custom-checkbox:checked+label::before {
@@ -91,6 +101,7 @@ export default {
   background-color: #F2C3A7;
   background-size: 13px 11px;
   background-image: url(~assets/img/svg/checkbox.svg);
+  cursor: pointer;
 }
 .todo__card{
   color: #734D3F;
@@ -121,10 +132,20 @@ export default {
         gap: 7px;
         align-items: center;
         width: fit-content;
+        position: relative;
         & .list__item-text{
           color: #F2C3A7;
           font-size: 14px;
         }
+      }
+      & .close__circle{
+        z-index: 10;
+        content: url(~assets/img/svg/clouse.svg);
+        position: absolute;
+        top: 0;
+        left: 100%;
+        transform: translate(-50%, -40%);
+        cursor: pointer;
       }
       & .list__item-active{
         background-color: #BF8C6F;

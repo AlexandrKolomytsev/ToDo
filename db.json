@@ -1,12 +1,31 @@
 {
-  "posts": [
-    { "id": 1, "text": "delectus aut autem", "status": "checked" },
-    { "id": 2, "text": "quis ut nam facilis et officia qui", "status": "" },
-    { "id": 3, "text": "fugiat veniam minus", "status": "checked" },
-    { "id": 4, "text": "et porro tempora", "status": "" }
+  "todos": [
+    {
+      "text": "delectus aut autem",
+      "checked": false,
+      "id": 1
+    },
+    {
+      "text": "quis ut nam facilis et officia qui",
+      "checked": false,
+      "id": 2
+    },
+    {
+      "text": "fugiat veniam minus",
+      "checked": false,
+      "id": 3
+    },
+    {
+      "text": "et porro tempora",
+      "checked": true,
+      "id": 4
+    }
   ],
-  "comments": [
-    { "id": 1, "body": "some comment", "postId": 1 }
-  ],
-  "profile": { "name": "typicode" }
+  "lists": [
+    {
+      "noteName": "Законченный список",
+      "mas": [],
+      "id": 1
+    }
+  ]
 }
